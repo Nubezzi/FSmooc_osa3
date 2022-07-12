@@ -1,7 +1,6 @@
+/*global process*/
 const mongoose = require('mongoose')
-
 const url = process.env.MONGODB_URI
-
 console.log('connecting to', url)
 mongoose.connect(url)
   .then(result => {
@@ -17,7 +16,7 @@ const noteSchema = new mongoose.Schema({
     minlength: 3,
     required: true
   },
-  number: { 
+  number: {
     type: String,
     required: true
   },
