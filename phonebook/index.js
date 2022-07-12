@@ -1,8 +1,11 @@
 const express = require('express')
+var morgan = require('morgan')
 const app = express()
 const randMax = 100000
+morgan.token('JSONcontent', function (req, res) { return JSON.stringify(req.body) })
 
 app.use(express.json())
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :JSONcontent'))
 
 let persons = [
     {
