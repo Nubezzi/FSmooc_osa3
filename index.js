@@ -1,7 +1,7 @@
 const express = require('express')
 var morgan = require('morgan')
 const cors = require('cors')
-
+//kommentti
 const app = express()
 const randMax = 100000
 morgan.token('JSONcontent', function (req, res) { return JSON.stringify(req.body) })
