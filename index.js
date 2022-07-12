@@ -90,22 +90,21 @@ app.get('/api/persons/:id', (request, response, next) => {
     return Math.floor(Math.random() * randMax)
   } */
 
-app.put('/api/persons/:id', (request, response, next) => {
-    const body = request.body
+  app.put('/api/persons/:id', (request, response, next) => {
+    const { name, number } = request.body
   
-    const note = {
-      name: body.name,
-      number: body.number,
-    }
-  
-    Person.findByIdAndUpdate(request.params.id, note, { new: true })
+    Note.findByIdAndUpdate(
+      request.params.id, 
+      { name, number },
+      { new: true, runValidators: true, context: 'query' }
+    ) 
       .then(updatedNote => {
         response.json(updatedNote)
       })
       .catch(error => next(error))
   })
 
-  app.post('/api/persons', (request, response) => {
+  app.post('/api/persons', (request, response, next) => {
     const body = request.body
   
     if (body.name === undefined || body.number === undefined) {
@@ -120,6 +119,7 @@ app.put('/api/persons/:id', (request, response, next) => {
     note.save().then(savedNote => {
       response.json(savedNote)
     })
+    .catch(error => next(error))
   })
   
 
@@ -128,6 +128,8 @@ const errorHandler = (error, request, response, next) => {
   
     if (error.name === 'CastError') {
       return response.status(400).send({ error: 'malformatted id' })
+    }else if (error.name === 'ValidationError') {
+      return response.status(400).send({ error: error.message })
     }
   
     next(error)
